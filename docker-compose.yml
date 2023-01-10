@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  website:
+    image: php:7.4-apache
+    container_name: website_apache_php
+    restart: unless-stopped
+    depends_on:
+      - simple_api
+    environment:
+      - USERNAME=toto
+      - PASSWORD=python
+    ports:
+      - "80:80"
+    volumes: 
+      - ./website:/var/www/html
+    networks:
+      - net-website
+    links:
+      - "simple_api:simple_api_flask"
+
+
+  simple_api:
+    image: simple_api:v1
+    container_name: simple_api_flask
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/data
+    networks:
+      - net-website
+
+networks:
+  net-website:    
